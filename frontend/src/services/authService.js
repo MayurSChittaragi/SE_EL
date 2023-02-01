@@ -114,6 +114,7 @@ export const getLoginStatus = async () => {
 export const getUser = async () => {
   try {
     const response = await axios.get(`${BACKEND_URL}/api/users/getuser`);
+    // console.log(response, "helo");
     return response.data;
   } catch (error) {
     const message =

@@ -14,6 +14,7 @@ const Dashboard = () => {
   const { products, isLoading, isError, message } = useSelector(
     (state) => state.product
   );
+  // console.log(products, "prods");
 
   useEffect(() => {
     if (isLoggedIn === true) {

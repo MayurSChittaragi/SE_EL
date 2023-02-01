@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import "./Sidebar.scss";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { RiProductHuntLine } from "react-icons/ri";
@@ -10,6 +11,7 @@ const Sidebar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
   const toggle = () => setIsOpen(!isOpen);
   const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.user);
 
   const goHome = () => {
     navigate("/");
@@ -35,6 +37,9 @@ const Sidebar = ({ children }) => {
           </div>
         </div>
         {menu.map((item, index) => {
+          if (item.title === "Add Product" && user.email !== "test@test.com") {
+            return null;
+          }
           return <SidebarItem key={index} item={item} isOpen={isOpen} />;
         })}
       </div>
