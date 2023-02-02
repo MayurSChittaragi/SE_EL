@@ -28,7 +28,7 @@ const Dashboard = () => {
     }
     async function getusers() {
       const data = await getUser();
-      console.log(data, "ohohoh");
+      // console.log(data, "ohohoh");
       await dispatch(SET_USER(data));
       await dispatch(SET_NAME(data.name));
     }

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import useRedirectLoggedOutUser from "../../../customHook/useRedirectLoggedOutUser";
@@ -8,10 +8,15 @@ import Card from "../../card/Card";
 import { SpinnerImg } from "../../loader/Loader";
 import "./ProductDetail.scss";
 import DOMPurify from "dompurify";
+import axios from "axios";
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
+const API_URL = `${BACKEND_URL}/api/sendemail`;
 
 const ProductDetail = () => {
   useRedirectLoggedOutUser("/login");
   const dispatch = useDispatch();
+  const [num, setNum] = useState();
 
   const { id } = useParams();
 
@@ -25,6 +30,18 @@ const ProductDetail = () => {
       return <span className="--color-success">In Stock</span>;
     }
     return <span className="--color-danger">Out Of Stock</span>;
+  };
+
+  const handleClick = async () => {
+    const data = {
+      SKU: product.sku,
+      category: product.category,
+      quantity: num,
+      price: product.price * num,
+    };
+    console.log(data, "helflo");
+    const response = await axios.post(API_URL, data);
+    return response.data;
   };
 
   useEffect(() => {
@@ -90,6 +107,22 @@ const ProductDetail = () => {
             <code className="--color-dark">
               Last Updated: {product.updatedAt.toLocaleString("en-US")}
             </code>
+            <div className="--color-dark">
+              <div>
+                <h3>Enter the quantity to sell</h3>
+              </div>
+              <input
+                type="number"
+                onChange={(e) => {
+                  setNum(e.target.value);
+                }}
+              />
+              <div>
+                <button onClick={handleClick} className="button">
+                  Sell
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </Card>
