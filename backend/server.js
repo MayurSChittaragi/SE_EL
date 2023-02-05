@@ -6,6 +6,7 @@ const cors = require("cors");
 const userRoute = require("./routes/userRoute");
 const productRoute = require("./routes/productRoute");
 const contactRoute = require("./routes/contactRoute");
+const emailRoute = require("./routes/emailRoute");
 const errorHandler = require("./middleWare/errorMiddleware");
 const cookieParser = require("cookie-parser");
 const path = require("path");
@@ -18,10 +19,10 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(
-	cors({
-		origin: ["http://localhost:3000", "https://pinvent-app.vercel.app"],
-		credentials: true,
-	})
+  cors({
+    origin: ["http://localhost:3000", "https://pinvent-app.vercel.app"],
+    credentials: true,
+  })
 );
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -30,10 +31,11 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
 app.use("/api/contactus", contactRoute);
+app.use("/api/sendemail", emailRoute);
 
 // Routes
 app.get("/", (req, res) => {
-	res.send("Home Page");
+  res.send("Home Page");
 });
 
 // Error Middleware
@@ -41,10 +43,10 @@ app.use(errorHandler);
 // Connect to DB and start server
 const PORT = process.env.PORT || 5000;
 mongoose
-	.connect(process.env.MONGO_URI)
-	.then(() => {
-		app.listen(PORT, () => {
-			console.log(`Server Running on port ${PORT}`);
-		});
-	})
-	.catch((err) => console.log(err));
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server Running on port ${PORT}`);
+    });
+  })
+  .catch((err) => console.log(err));

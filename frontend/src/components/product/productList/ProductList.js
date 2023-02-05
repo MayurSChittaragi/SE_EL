@@ -21,6 +21,7 @@ import { Link } from "react-router-dom";
 const ProductList = ({ products, isLoading }) => {
   const [search, setSearch] = useState("");
   const filteredProducts = useSelector(selectFilteredPoducts);
+  const user = useSelector((state) => state.auth.user);
 
   const dispatch = useDispatch();
 
@@ -136,18 +137,22 @@ const ProductList = ({ products, isLoading }) => {
                             <AiOutlineEye size={25} color={"purple"} />
                           </Link>
                         </span>
-                        <span>
-                          <Link to={`/edit-product/${_id}`}>
-                            <FaEdit size={20} color={"green"} />
-                          </Link>
-                        </span>
-                        <span>
-                          <FaTrashAlt
-                            size={20}
-                            color={"red"}
-                            onClick={() => confirmDelete(_id)}
-                          />
-                        </span>
+                        {user.email === "test@test.com" ? (
+                          <span>
+                            <Link to={`/edit-product/${_id}`}>
+                              <FaEdit size={20} color={"green"} />
+                            </Link>
+                          </span>
+                        ) : null}
+                        {user.email === "test@test.com" ? (
+                          <span>
+                            <FaTrashAlt
+                              size={20}
+                              color={"red"}
+                              onClick={() => confirmDelete(_id)}
+                            />
+                          </span>
+                        ) : null}
                       </td>
                     </tr>
                   );

@@ -5,6 +5,8 @@ import ProductSummary from "../../components/product/productSummary/ProductSumma
 import useRedirectLoggedOutUser from "../../customHook/useRedirectLoggedOutUser";
 import { selectIsLoggedIn } from "../../redux/features/auth/authSlice";
 import { getProducts } from "../../redux/features/product/productSlice";
+import { getUser } from "../../services/authService";
+import { SET_USER, SET_NAME } from "../../redux/features/auth/authSlice";
 
 const Dashboard = () => {
   useRedirectLoggedOutUser("/login");
@@ -24,6 +26,13 @@ const Dashboard = () => {
     if (isError) {
       console.log(message);
     }
+    async function getusers() {
+      const data = await getUser();
+      // console.log(data, "ohohoh");
+      await dispatch(SET_USER(data));
+      await dispatch(SET_NAME(data.name));
+    }
+    getusers();
   }, [isLoggedIn, isError, message, dispatch]);
 
   return (
