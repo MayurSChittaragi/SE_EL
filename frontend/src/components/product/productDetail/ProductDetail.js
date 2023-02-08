@@ -55,6 +55,7 @@ const ProductDetail = () => {
     if (quantity > 0) {
       if (quantity < 5) {
         quantAlert();
+        // console.log("alert");
         return <span className="--color-success">In Stock</span>;
       } else return <span className="--color-success">In Stock</span>;
     }

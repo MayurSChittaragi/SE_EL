@@ -7,11 +7,10 @@ const sendmail = async (req, res) => {
   let testAccount = await nodemailer.createTestAccount();
 
   let transporter = await nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
+    service: "gmail",
     auth: {
-      user: "francesco.hahn32@ethereal.email",
-      pass: "a9jmsu3XapUqrRAfXH",
+      user: "mjdavda02@gmail.com",
+      pass: "xvbcfcnmwsscthub",
     },
   });
 
@@ -55,8 +54,8 @@ const sendmail = async (req, res) => {
 
   let mail = MailGenerator.generate(data.isSelling ? response : response2);
   let info = await transporter.sendMail({
-    from: '"Meeth Davda" <test@gmail.com>', // sender address
-    to: "test2@gmail.com", // list of receivers
+    from: "mjdavda02@gmail.com", // sender address
+    to: "mayur_chittaragi@rediffmail.com,pydivenkat.cs20@rvce.edu.in ", // list of receivers
     subject: data.isSelling
       ? "Invoice from the Store staff "
       : "Quantity Alerts", // Subject line
