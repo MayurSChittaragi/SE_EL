@@ -3,12 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import useRedirectLoggedOutUser from "../../../customHook/useRedirectLoggedOutUser";
 import { selectIsLoggedIn } from "../../../redux/features/auth/authSlice";
-import { getProduct } from "../../../redux/features/product/productSlice";
+import {
+  getProduct,
+  updateProduct,
+} from "../../../redux/features/product/productSlice";
 import Card from "../../card/Card";
 import { SpinnerImg } from "../../loader/Loader";
 import "./ProductDetail.scss";
 import DOMPurify from "dompurify";
 import axios from "axios";
+
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const API_URL = `${BACKEND_URL}/api/sendemail`;
@@ -25,21 +29,14 @@ const ProductDetail = () => {
     (state) => state.product
   );
 
-  const stockStatus = (quantity) => {
-    if (quantity > 0) {
-      return <span className="--color-success">In Stock</span>;
-    }
-    return <span className="--color-danger">Out Of Stock</span>;
-  };
-
-  const handleClick = async () => {
+  const quantAlert = async () => {
     const data = {
       SKU: product.sku,
       category: product.category,
-      quantity: num,
-      price: product.price * num,
+      isSelling: 0,
+      quantity: product.quantity,
     };
-    console.log(data, "helflo");
+    console.log(data, "heheeh");
     const response = await axios.post(API_URL, data);
     return response.data;
   };
@@ -53,6 +50,47 @@ const ProductDetail = () => {
       console.log(message);
     }
   }, [isLoggedIn, isError, message, dispatch]);
+
+  const stockStatus = (quantity) => {
+    if (quantity > 0) {
+      if (quantity < 5) {
+        quantAlert();
+        return <span className="--color-success">In Stock</span>;
+      } else return <span className="--color-success">In Stock</span>;
+    }
+    return <span className="--color-danger">Out Of Stock</span>;
+  };
+
+  const quantStatus = (quantity) => {
+    if (quantity < 5) {
+      // console.log("alert");
+      // quantAlert();
+      return quantity;
+    } else {
+      return quantity;
+    }
+  };
+
+  const handleQuant = async () => {
+    const formData = new FormData();
+    formData.append("quantity", product?.quantity - num);
+    console.log(...formData);
+    await dispatch(updateProduct({ id, formData }));
+    await dispatch(getProduct(id));
+  };
+  const handleClick = async () => {
+    const data = {
+      SKU: product.sku,
+      category: product.category,
+      quantity: num,
+      price: product.price * num,
+      isSelling: 1,
+    };
+    // console.log(data, "helflo");
+    handleQuant();
+    const response = await axios.post(API_URL, data);
+    return response.data;
+  };
 
   return (
     <div className="product-detail">
@@ -87,7 +125,7 @@ const ProductDetail = () => {
               {product.price}
             </p>
             <p>
-              <b>&rarr; Quantity in stock : </b> {product.quantity}
+              <b>&rarr; Quantity in stock : </b> {quantStatus(product.quantity)}
             </p>
             <p>
               <b>&rarr; Total Value in stock : </b> {"$"}
@@ -100,13 +138,13 @@ const ProductDetail = () => {
               }}
             ></div>
             <hr />
-            <code className="--color-dark">
-              Created on: {product.createdAt.toLocaleString("en-US")}
+            {/* <code className="--color-dark">
+              Created on: {product?.createdAt.toLocaleString("en-US")}
             </code>
             <br />
             <code className="--color-dark">
-              Last Updated: {product.updatedAt.toLocaleString("en-US")}
-            </code>
+              Last Updated: {product?.updatedAt.toLocaleString("en-US")}
+            </code> */}
             <div className="--color-dark">
               <div>
                 <h3>Enter the quantity to sell</h3>
